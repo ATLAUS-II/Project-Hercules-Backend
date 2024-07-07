@@ -2,7 +2,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node sever.js",
-    "test": "jest --watchAll"
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
