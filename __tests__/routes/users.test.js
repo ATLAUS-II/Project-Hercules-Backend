@@ -22,7 +22,7 @@ jest.mock('express-oauth2-jwt-bearer', () => ({
   })
 }))
 
-describe('GET /users/:id', () => {
+describe('GET user info', () => {
   let findByIdSpy
 
   beforeEach(() => {
