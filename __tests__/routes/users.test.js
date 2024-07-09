@@ -10,6 +10,18 @@ const { app } = require('../../src/app')
 
 const { User } = require('../../models')
 
+// TODO: Edit to mock the production usage of the middleware.
+// Mock auth middleware.
+jest.mock('express-oauth2-jwt-bearer', () => ({
+  auth: jest.fn(() => {
+    return (req, res, next) => {
+      // TODO: Remove this console.log statement.
+      console.log('Mock auth middleware called')
+      next()
+    }
+  })
+}))
+
 describe('GET /users/:id', () => {
   let findByIdSpy
 
