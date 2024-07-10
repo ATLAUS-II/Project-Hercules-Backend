@@ -33,7 +33,7 @@ describe('GET user info', () => {
     findByIdSpy.mockRestore()
   })
 
-  test('should return a product by id', async () => {
+  test('should return a user by id', async () => {
     const mockUser = {
       _id: '123',
       nickname: 'test user',
