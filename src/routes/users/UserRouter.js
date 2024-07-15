@@ -1,11 +1,9 @@
 const express = require('express')
 const { User } = require('../../../models')
-const { checkUser } = require('../../middleware/checkUser')
 
 const router = express.Router()
 
-// POST Create a new User.
-// TODO: Will be replaced by middleware that handles creation of a new user.
+// [ADMIN] POST Create a new User.
 router.post('/', async (req, res, next) => {
   const { nickname, email, userId } = req.body
   try {
@@ -16,19 +14,25 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-// GET User by ID.
-// TODO Pass the user ID in the middleware.
-// Main purpose of this is for testing purposes.
-router.get('/', checkUser, async (req, res, next) => {
-  const { _id } = req.user
+// GET User by ID and if no user is found, create user.
+router.get('/', async (req, res, next) => {
+  const userInfo = JSON.parse(req.headers['x-user-info'])
+  // TODO: Parse the sub to get the Auth0 user ID.
   try {
-    const user = await User.findById(_id)
+    const user = await User.findById({ userId: userInfo.userId })
+
     if (!user) {
-      return res.status(404).send({ message: `User with ID ${_id} not found.` })
+      const newUser = await User.create({
+        nickname: userInfo.nickname,
+        email: userInfo.email,
+        userId: userInfo.userId
+      })
+      return res.status(201).send({ user: newUser })
     }
+
     res.status(200).send({ user })
-  } catch (error) {
-    next(error)
+  } catch (err) {
+    next(err)
   }
 })
 
