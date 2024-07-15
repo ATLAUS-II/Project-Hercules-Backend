@@ -10,6 +10,7 @@ const { app } = require('../../src/app')
 
 const { User } = require('../../models')
 
+// Mock the express-oauth2-jwt-bearer module.
 jest.mock('express-oauth2-jwt-bearer', () => ({
   auth: jest.fn(() => {
     return (req, res, next) => {
@@ -19,6 +20,7 @@ jest.mock('express-oauth2-jwt-bearer', () => ({
 }))
 
 describe('GET user info', () => {
+  // Variables to hold the jest spies.
   let findByIdSpy
   let createSpy
 
@@ -39,6 +41,7 @@ describe('GET user info', () => {
       userId: '123'
     }
 
+    // Set the spy to return the mock user.
     findByIdSpy.mockReturnValue(mockUser)
 
     // Send request to user by id endpoint.
@@ -51,6 +54,7 @@ describe('GET user info', () => {
   })
 
   test('should create a user if no user is found', async () => {
+    // Set the spy to return null on the 'findById' method.
     findByIdSpy.mockReturnValue(null)
 
     const newUser = {
@@ -59,8 +63,10 @@ describe('GET user info', () => {
       userId: '456'
     }
 
+    // Set the spy to return the mock user on the 'create' method.
     createSpy.mockReturnValue(newUser)
 
+    // Send request to user by id endpoint.
     const response = await request(app)
       .get('/api/v1/users/')
       .set('X-User-Info', JSON.stringify(newUser))
