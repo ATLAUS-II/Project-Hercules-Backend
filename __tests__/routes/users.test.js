@@ -21,6 +21,7 @@ jest.mock('express-oauth2-jwt-bearer', () => ({
 // TODO: Add mock for the checkUser middleware.
 jest.mock('../../src/middleware/checkUser', () => ({
   checkUser: jest.fn(async (req, res, next) => {
+    console.log('CHECK USER RAN!')
     const userInfo = JSON.parse(req.headers['x-user-info'])
     // Mock finding or creating the user in the database
     // and return the user instance.

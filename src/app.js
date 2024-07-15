@@ -25,7 +25,7 @@ app.use(jwtCheck)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use(checkUser)
+// app.use(checkUser)
 
 app.get('/', (req, res) => {
   res.json({ msg: 'Hello, World' })

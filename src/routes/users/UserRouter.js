@@ -1,5 +1,6 @@
 const express = require('express')
 const { User } = require('../../../models')
+const { checkUser } = require('../../middleware/checkUser')
 
 const router = express.Router()
 
@@ -18,7 +19,7 @@ router.post('/', async (req, res, next) => {
 // GET User by ID.
 // TODO Pass the user ID in the middleware.
 // Main purpose of this is for testing purposes.
-router.get('/', async (req, res, next) => {
+router.get('/', checkUser, async (req, res, next) => {
   const { _id } = req.user
   try {
     const user = await User.findById(_id)
