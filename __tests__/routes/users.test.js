@@ -10,37 +10,68 @@ const { app } = require('../../src/app')
 
 const { User } = require('../../models')
 
-describe('GET /users/:id', () => {
+// Mock the express-oauth2-jwt-bearer module.
+jest.mock('express-oauth2-jwt-bearer', () => ({
+  auth: jest.fn(() => {
+    return (req, res, next) => {
+      next()
+    }
+  })
+}))
+
+describe('GET user info', () => {
+  // Variables to hold the jest spies.
   let findByIdSpy
+  let createSpy
 
   beforeEach(() => {
     findByIdSpy = jest.spyOn(User, 'findById')
+    createSpy = jest.spyOn(User, 'create')
   })
 
   afterEach(() => {
     findByIdSpy.mockRestore()
+    createSpy.mockRestore()
   })
 
-  test('should return a product by id', async () => {
+  test('should return a user by id', async () => {
     const mockUser = {
-      _id: '123',
       nickname: 'test user',
       email: 'test@user.com',
       userId: '123'
     }
 
+    // Set the spy to return the mock user.
     findByIdSpy.mockReturnValue(mockUser)
 
-    const response = await request(app).get('/api/v1/users/123')
+    // Send request to user by id endpoint.
+    const response = await request(app)
+      .get('/api/v1/users/')
+      .set('X-User-Info', JSON.stringify(mockUser))
+
     expect(response.status).toBe(200)
     expect(response.body).toEqual({ user: mockUser })
   })
 
-  test('should return 404 if user is not found', async () => {
+  test('should create a user if no user is found', async () => {
+    // Set the spy to return null on the 'findById' method.
     findByIdSpy.mockReturnValue(null)
 
-    const response = await request(app).get('/api/v1/users/123')
-    expect(response.status).toBe(404)
-    expect(response.body).toEqual({ message: 'User with ID 123 not found.' })
+    const newUser = {
+      nickname: 'new user',
+      email: 'new@user.com',
+      userId: '456'
+    }
+
+    // Set the spy to return the mock user on the 'create' method.
+    createSpy.mockReturnValue(newUser)
+
+    // Send request to user by id endpoint.
+    const response = await request(app)
+      .get('/api/v1/users/')
+      .set('X-User-Info', JSON.stringify(newUser))
+
+    expect(response.status).toBe(201)
+    expect(response.body).toEqual({ user: newUser })
   })
 })
