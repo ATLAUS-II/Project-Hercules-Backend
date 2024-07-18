@@ -21,50 +21,62 @@ jest.mock('express-oauth2-jwt-bearer', () => ({
 
 describe('GET user info', () => {
   // Variables to hold the jest spies.
-  let findByIdSpy
+  let findOneSpy
   let createSpy
 
   beforeEach(() => {
-    findByIdSpy = jest.spyOn(User, 'findById')
+    findOneSpy = jest.spyOn(User, 'findOne')
     createSpy = jest.spyOn(User, 'create')
   })
 
   afterEach(() => {
-    findByIdSpy.mockRestore()
+    findOneSpy.mockRestore()
     createSpy.mockRestore()
   })
 
   test('should return a user by id', async () => {
-    const mockUser = {
+    const mockAuthUser = {
       nickname: 'test user',
       email: 'test@user.com',
-      userId: '123'
+      sub: 'abc|123'
+    }
+
+    const mockDBUser = {
+      nickname: 'test user',
+      email: 'test@user.com',
+      userID: '123'
     }
 
     // Set the spy to return the mock user.
-    findByIdSpy.mockReturnValue(mockUser)
+    findOneSpy.mockReturnValue(mockDBUser)
 
     // Send request to user by id endpoint.
     const response = await request(app)
       .get('/api/v1/users/')
-      .set('X-User-Info', JSON.stringify(mockUser))
+      .set('X-User-Info', JSON.stringify(mockAuthUser))
 
     expect(response.status).toBe(200)
-    expect(response.body).toEqual({ user: mockUser })
+    expect(response.body).toEqual({ user: mockDBUser })
   })
 
   test('should create a user if no user is found', async () => {
-    // Set the spy to return null on the 'findById' method.
-    findByIdSpy.mockReturnValue(null)
+    // Set the spy to return null on the 'findOne' method.
+    findOneSpy.mockReturnValue(null)
 
     const newUser = {
+      nickname: 'new user',
+      email: 'new@user.com',
+      sub: 'abc|456'
+    }
+
+    const newDBUser = {
       nickname: 'new user',
       email: 'new@user.com',
       userId: '456'
     }
 
     // Set the spy to return the mock user on the 'create' method.
-    createSpy.mockReturnValue(newUser)
+    createSpy.mockReturnValue(newDBUser)
 
     // Send request to user by id endpoint.
     const response = await request(app)
@@ -72,6 +84,6 @@ describe('GET user info', () => {
       .set('X-User-Info', JSON.stringify(newUser))
 
     expect(response.status).toBe(201)
-    expect(response.body).toEqual({ user: newUser })
+    expect(response.body).toEqual({ user: newDBUser })
   })
 })

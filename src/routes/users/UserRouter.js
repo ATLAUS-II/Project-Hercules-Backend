@@ -18,14 +18,15 @@ router.post('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
   const userInfo = JSON.parse(req.headers['x-user-info'])
   // TODO: Parse the sub to get the Auth0 user ID.
+  const userId = userInfo.sub.split('|')[1]
   try {
-    const user = await User.findById({ userId: userInfo.userId })
+    const user = await User.findOne({ userId: userId })
 
     if (!user) {
       const newUser = await User.create({
         nickname: userInfo.nickname,
         email: userInfo.email,
-        userId: userInfo.userId
+        userId: userId
       })
       return res.status(201).send({ user: newUser })
     }
