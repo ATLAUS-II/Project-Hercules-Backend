@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
   // TODO: Parse the sub to get the Auth0 user ID.
   const userId = userInfo.sub.split('|')[1]
   try {
-    const user = await User.findById({ userId })
+    const user = await User.findOne({ userId: userId })
 
     if (!user) {
       const newUser = await User.create({

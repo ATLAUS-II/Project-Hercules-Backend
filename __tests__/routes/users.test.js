@@ -25,7 +25,7 @@ describe('GET user info', () => {
   let createSpy
 
   beforeEach(() => {
-    findByIdSpy = jest.spyOn(User, 'findById')
+    findByIdSpy = jest.spyOn(User, 'findOne')
     createSpy = jest.spyOn(User, 'create')
   })
 
