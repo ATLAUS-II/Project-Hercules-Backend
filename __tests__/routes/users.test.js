@@ -21,16 +21,16 @@ jest.mock('express-oauth2-jwt-bearer', () => ({
 
 describe('GET user info', () => {
   // Variables to hold the jest spies.
-  let findByIdSpy
+  let findOneSpy
   let createSpy
 
   beforeEach(() => {
-    findByIdSpy = jest.spyOn(User, 'findOne')
+    findOneSpy = jest.spyOn(User, 'findOne')
     createSpy = jest.spyOn(User, 'create')
   })
 
   afterEach(() => {
-    findByIdSpy.mockRestore()
+    findOneSpy.mockRestore()
     createSpy.mockRestore()
   })
 
@@ -48,7 +48,7 @@ describe('GET user info', () => {
     }
 
     // Set the spy to return the mock user.
-    findByIdSpy.mockReturnValue(mockDBUser)
+    findOneSpy.mockReturnValue(mockDBUser)
 
     // Send request to user by id endpoint.
     const response = await request(app)
@@ -60,8 +60,8 @@ describe('GET user info', () => {
   })
 
   test('should create a user if no user is found', async () => {
-    // Set the spy to return null on the 'findById' method.
-    findByIdSpy.mockReturnValue(null)
+    // Set the spy to return null on the 'findOne' method.
+    findOneSpy.mockReturnValue(null)
 
     const newUser = {
       nickname: 'new user',
