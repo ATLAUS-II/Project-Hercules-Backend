@@ -36,15 +36,3 @@ router.get('/', async (req, res, next) => {
     next(err)
   }
 })
-
-// TODO: Delete after tests.
-router.get('/test', (req, res, next) => {
-  const userInfo = JSON.parse(req.headers['x-user-info'])
-
-  const userId = userInfo.sub.split('|')[1]
-
-  console.log(userInfo, userId)
-  res.status(200).send({ msg: 'test route hit!' })
-})
-
-module.exports = router
