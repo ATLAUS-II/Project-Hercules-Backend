@@ -36,7 +36,8 @@ async function runGemini(prompt) {
      res.json({ workout })
  
     } catch (error)  {
-     res.status(500).json({ message: "Error generating workout" })
+      console.error(error)
+      res.status(500).json({ message: "There was an Error generating workout" })
     }
  })
 
