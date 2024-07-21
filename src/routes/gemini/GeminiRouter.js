@@ -19,6 +19,25 @@ async function runGemini(prompt) {
     return text
   }
   
-
+  router.post('/', async(req, res, next) => {
+    try {
+     // Get prompt from request body
+     const { prompt } = req.body
+ 
+     // Make sure prompt exists
+     if (!prompt) {
+       return res.status(400).json({ message: "Missing prompt in request" })
+     }
+ 
+     // Generate workout with prompt
+     const workout = await runGemini(prompt);
+ 
+     // Send generated workout as JSON
+     res.json({ workout })
+ 
+    } catch (error)  {
+     res.status(500).json({ message: "Error generating workout" })
+    }
+ })
 
 module.exports = router;
