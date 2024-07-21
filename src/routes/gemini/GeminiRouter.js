@@ -29,8 +29,14 @@ async function runGemini(prompt) {
        return res.status(400).json({ message: "Missing prompt in request" })
      }
  
-     // Generate workout with prompt
-     const workout = await runGemini(prompt);
+     // Generate workout response with prompt
+     const geminiResponse = await runGemini(prompt);
+
+     // Remove all escape characters from the Gemini Response
+     const cleanedResponse = geminiResponse.replace(/\\n/g, "")
+
+     // Parse the Cleaned workout as JSON
+     const workout = JSON.parse(cleanedResponse)
  
      // Send generated workout as JSON
      res.json({ workout })
