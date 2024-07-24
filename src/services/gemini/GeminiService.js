@@ -16,4 +16,4 @@ async function runGemini(prompt) {
     return text
   }
 
-module.exports =  runGemini 
+module.exports = { runGemini }
