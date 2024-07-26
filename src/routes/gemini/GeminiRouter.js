@@ -2,9 +2,9 @@ const express = require('express')
 require('dotenv').config()
 const { runGemini } = require('../../services/gemini/GeminiService')
 
-const GeminiRouter = express.Router()
+const router = express.Router()
   
-  GeminiRouter.get('/workout', async(req, res, next) => {
+  router.get('/workout', async(req, res, next) => {
     try {
      // Get prompt from request body
      const { focus, level, type } = req.query
@@ -40,4 +40,4 @@ const GeminiRouter = express.Router()
     }
  })
 
-module.exports = { GeminiRouter };
+module.exports = router 

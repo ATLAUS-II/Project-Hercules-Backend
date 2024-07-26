@@ -1,7 +1,7 @@
 const request = require('supertest');
 const express = require('express');
 const { runGemini } = require('../../src/services/gemini/GeminiService'); // Import as named export
-const { GeminiRouter } = require('../../src/routes/gemini/GeminiRouter');
+const GeminiRouter  = require('../../src/routes/gemini/GeminiRouter');
 
 jest.mock('@google/generative-ai');  // Mock the GoogleGenerativeAI library
 
