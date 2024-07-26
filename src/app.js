@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const { UserRouter } = require('./routes')
+const { UserRouter, GeminiRouter } = require('./routes')
 const morgan = require('morgan')
 const { auth } = require('express-oauth2-jwt-bearer')
 const { AUTH0_SECRET, AUTH0_AUDIENCE, AUTH0_BASE_URL, AUTH0_SIGNING_ALGO } =
@@ -28,6 +28,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/users', UserRouter)
+
+app.use('/api/v1/gemini', GeminiRouter)
 
 module.exports = {
   app
