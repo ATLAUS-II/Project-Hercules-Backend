@@ -18,32 +18,51 @@ describe('Gemini Router Tests', () => {
     app.use('/api/v1/gemini', GeminiRouter);
   });
 
-  // Test successful workout generation
+  mockedWorkout = {
+      "focus_area" : "upper",
+      "type": "strength",
+      "level": "beginner",
+      "exercises" : [
+        {
+          "exerciseName": "Push-ups",
+          "reps": 10,
+          "sets": 3
+        }
+      ]
+  }
+
   it('should return a 200 status code and workout in JSON format on a valid request', async () => {
-    const mockResponse = JSON.stringify({ workout: [{ exerciseName: 'Push-ups' }] });  // Mock response from runGemini
+    const mockResponse = JSON.stringify(mockedWorkout);  // Mock response from runGemini
     runGemini.mockResolvedValue(mockResponse);  // Mock runGemini behavior
 
-    const response = await request(app).post('/api/v1/gemini/').send({ prompt: 'Generate a workout for me' });
+    const response = await request(app).get('/api/v1/gemini/workout?focus=upper&strength&type=strength&level=beginner');
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('workout');
-    expect(response.body.workout[0]).toHaveProperty('exerciseName'); // Check for workout data
+    console.log(response.body)
+    expect(response.body.workout).toHaveProperty('focus_area'); // Check for workout data
   });
 
-  // Test missing prompt error
-  it('should return a 400 status code for missing prompt in request body', async () => {
-    const response = await request(app).post('/api/v1/gemini/');
+  it('should return a 400 status code for missing query in request', async () => {
+    const response = await request(app).get('/api/v1/gemini/workout?focus=upper&type=strength');
     expect(response.statusCode).toBe(400);
     expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Missing prompt in request');
+    expect(response.body.message).toBe('Invalid Level');
   });
 
-  // Test error handling during workout generation
-  it('should return a 500 status code for errors during workout generation', async () => {
-    runGemini.mockRejectedValue(new Error('Mocked error'));
+    it('should return a 400 status code for invalid query option in request', async () => {
+      const response = await request(app).get('/api/v1/gemini/workout?focus=upper&type=strength&level=noob');
+      expect(response.statusCode).toBe(400);
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('Invalid Level');
+    });
 
-    const response = await request(app).post('/api/v1/gemini/').send({ prompt: 'Generate a workout for me' });
+  it('should return a 500 status code for errors during workout generation', async () => {
+    const error = new Error('Mocked error')
+    runGemini.mockRejectedValue(error);
+
+    const response = await request(app).get('/api/v1/gemini/workout?focus=upper&strength&type=strength&level=beginner');
     expect(response.statusCode).toBe(500);
     expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('There was an Error generating workout');
+    expect(response.body.message).toBe(`There was an Error generating workout: ${error}`);
   });
 });
