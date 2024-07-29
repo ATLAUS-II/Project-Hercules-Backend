@@ -38,7 +38,7 @@ describe('Gemini Router Tests', () => {
     const response = await request(app).get('/api/v1/gemini/workout?focus=upper&strength&type=strength&level=beginner');
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('workout');
-    console.log(response.body)
+    // console.log(response.body)
     expect(response.body.workout).toHaveProperty('focus_area'); // Check for workout data
   });
 

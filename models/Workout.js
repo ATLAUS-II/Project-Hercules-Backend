@@ -2,15 +2,19 @@ const { Schema } = require("mongoose")
 
 const Workout = new Schema(
     {
-        name: {
+        focusArea: {
             type: String,
             required: true
         },
-        email: {
+        type: {
             type: String,
             required: true
         },
-        workouts: [{
+        level: {
+            type: String,
+            required: true
+        },
+        exercise: [{
             type: Schema.Types.ObjectId, 
             ref: "Workout"
         }]
