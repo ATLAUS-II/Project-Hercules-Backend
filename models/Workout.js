@@ -16,7 +16,7 @@ const Workout = new Schema(
         },
         exercise: [{
             type: Schema.Types.ObjectId, 
-            ref: "Workout"
+            ref: "Exercise"
         }]
     },
     { timestamps: true }

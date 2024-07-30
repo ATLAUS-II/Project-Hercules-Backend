@@ -5,11 +5,11 @@ const Exercise = new Schema({
         type: String,
         required: true 
     },
-    Rep: {
+    rep: {
         type: Number,
         required: true
     },
-    Set: {
+    set: {
         type: Number,
         required: true
     }
