@@ -19,17 +19,14 @@ describe("User Model test", () => {
 
     const mockWorkout = {
         _id: workoutId,
-        type: "UpperBody",
+        type: "Strength Training",
         level:"Intermediate",
-        focusArea: "Back",
+        focusArea: "Upper",
         exercise: []
     }
 
     beforeAll(async () => {
         await memoryServerConnect()
-
-        await User.create()
-        await Workout.create()
     })
 
     afterAll(async () => {
@@ -99,9 +96,9 @@ describe("Workout Model Test", () => {
 
     const mockWorkout = {
         _id: workoutId,
-        focusArea: "Back",
-        type: "UpperBody",
+        type: "Strength Training",
         level:"Intermediate",
+        focusArea: "Upper",
         exercise: []
     }
 
@@ -114,10 +111,6 @@ describe("Workout Model Test", () => {
 
     beforeAll(async () => {
         await memoryServerConnect()
-
-        // Test Data
-        await Workout.create();
-        await Exercise.create();
     })
 
     afterAll(async () => {
@@ -144,8 +137,8 @@ describe("Workout Model Test", () => {
 
     test("Find all workouts", async () => {
         const newWorkout = await Workout.create({
-            focusArea: "Chest",
-            type: "UpperBody",
+            focusArea: "Lower",
+            type: "Body Building",
             level:"Beginner",
             exercise: []
         })
@@ -195,8 +188,6 @@ describe("Exercise Model Test", () => {
 
     beforeAll(async () => {
         await memoryServerConnect()
-
-        await Exercise.create()
     })
 
     afterAll(async () => {

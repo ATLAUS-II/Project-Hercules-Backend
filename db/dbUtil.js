@@ -8,7 +8,7 @@ let mongoServer
 const memoryServerConnect = async () => {
     mongoServer = await MongoMemoryServer.create()
     const uri = mongoServer.getUri()
-    console.log("Connected to Mongodb Memory Server")
+    // console.log("Connected to Mongodb Memory Server")
     await mongoose.connect(uri)
 }
 
