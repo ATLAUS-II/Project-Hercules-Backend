@@ -7,7 +7,7 @@ const router = express.Router()
   router.get('/workout', async(req, res, next) => {
     try {
      // Get prompt from request body
-     const { focus, level, type } = req.query
+     const { focus, type, level } = req.query
 
     const  focus_Areas = [ "upper", "lower", "full"]
     const levels = ["beginner", "intermediate", "advanced"]
@@ -27,7 +27,7 @@ const router = express.Router()
     }
  
      // Generate workout response with prompt
-     const geminiResponse = await runGemini(focus, level, type);
+     const geminiResponse = await runGemini(focus, type, level);
 
      // Parse the Gemini response as JSON
      const workout = JSON.parse(geminiResponse)
