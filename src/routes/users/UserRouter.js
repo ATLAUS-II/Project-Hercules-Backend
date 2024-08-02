@@ -51,17 +51,14 @@ router.get("/:id", async(req, res, next) => {
     
     res.status(200).send({user: userById})
   } catch (error) {
-    next(error)
+      next(error)
   }
 })
 
 router.patch("/:id", async(req, res, next) => {
   try {
-    const update = {
-      nickname: req.body.nickname,
-      email:req.body.email,
-    }
     const userId = req.params.id
+    const update = req.body
     const userById = await User.findByIdAndUpdate(userId, update, { new: true }) // {new:true} returns updated document
     
     if (!userById) {

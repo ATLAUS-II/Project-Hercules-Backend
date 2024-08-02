@@ -12,7 +12,7 @@ const { app } = require('../../src/app')
 
 const { User } = require('../../models')
 const { memoryServerConnect, memoryServerDisconnect, clearDatabase } = require('../../db/dbUtil')
-const { default: mongoose } = require('mongoose')
+const mongoose  = require('mongoose')
 const { json } = require('express')
 
 // Mock the express-oauth2-jwt-bearer module.
@@ -22,7 +22,7 @@ jest.mock('express-oauth2-jwt-bearer', () => ({
       next()
     }
   })
-}))
+})) 
 
 describe('GET user info', () => {
   // Variables to hold the jest spies.
@@ -116,6 +116,11 @@ describe("User Integration Test", () => {
     workouts: []
   };
 
+  const userUpdate = {
+    nickname: "Phillip",
+    email: "Phillip@test.com"
+  }
+
   beforeAll(async () => {
     await memoryServerConnect();
   });
@@ -144,9 +149,6 @@ describe("User Integration Test", () => {
       .get('/api/v1/users/all')
       .set('X-User-Info', JSON.stringify(allUsers));
 
-    // Log the response to see what is returned
-    // console.log(response.body); 
-
     // Assertions
     expect(response.status).toBe(200);
     expect(response.body.users.length).toBeGreaterThan(0) 
@@ -167,23 +169,22 @@ describe("User Integration Test", () => {
       .get(`/api/v1/users/${allUsers[0]._id}`)
       .set('X-User-Info', JSON.stringify(userById))
 
-    // console.log(response)
     expect(response.status).toBe(200)
-    expect(userById.nickname).toBe(mockAuthUser1.nickname)
-    expect(userById.email).toBe(mockAuthUser1.email)
+    expect(response.body.user._id).toBe(allUsers[0]._id.toString())
+    expect(response.body.user.nickname).toBe(mockAuthUser1.nickname)
+    expect(response.body.user.email).toBe(mockAuthUser1.email)
   })
 
   test("Update User info", async () => {
     const newUser = await User.create(mockAuthUser1)
-    const userById = await User.findByIdAndUpdate(userId, { nickname: "Phillip" }, { new: true })
+    const userById = await User.findByIdAndUpdate(userId, userUpdate, { new: true })
 
     const response = await request(app)
-      .get(`/api/v1/users/${userId}`)
-      .set('X-User-Info', JSON.stringify(userById))
-
-    console.log(response) 
+      .patch(`/api/v1/users/${userId}`)
+      .send(userById)
 
     expect(response.status).toBe(200) 
     expect(response.body.user.nickname).toBe(userById.nickname)
+    expect(response.body.user.email).toBe(userById.email)
   })
 });
