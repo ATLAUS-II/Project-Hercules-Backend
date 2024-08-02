@@ -27,4 +27,52 @@ router.get('/', async (req, res, next) => {
 })
 
 
+router.get("/all", async(req, res, next) => {
+  try {
+    const users = await User.find()
+
+    if(users.length < 1) {
+      res.status(404).send({message: "There are no Users"})
+    }
+    res.status(200).send({ users })
+  } catch (error) {
+    next(err)
+  }
+})
+
+router.get("/:id", async(req, res, next) => {
+  try {
+    const userId = req.params.id
+    const userById = await User.findById(userId)
+    
+    if (!userById) {
+      return res.status(404).send({ message: "User not found" })
+    }
+    
+    res.status(200).send({user: userById})
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.patch("/:id", async(req, res, next) => {
+  try {
+    const update = {
+      nickname: req.body.nickname,
+      email:req.body.email,
+    }
+    const userId = req.params.id
+    const userById = await User.findByIdAndUpdate(userId, update, { new: true }) // {new:true} returns updated document
+    
+    if (!userById) {
+      res.status(404).send({ message: "User Not Found" })
+    }
+
+    res.status(200).send({ user: userById })
+  } catch (error) {
+    next(error)
+  }
+})
+
+
 module.exports = router
