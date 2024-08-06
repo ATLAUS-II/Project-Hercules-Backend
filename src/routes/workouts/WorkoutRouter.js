@@ -1,16 +1,16 @@
 const express = require('express')
-const { Workout } = require('../../../models')
+const { Workout, User, Exercise } = require('../../../models')
+const { default: mongoose } = require('mongoose')
+
 
 const router = express.Router()
-
-
 
 router.get("/all", async(req, res, next) => {
     try {
         const workouts = await Workout.find()
     
         if(workouts.length < 1) {
-            res.status(404).send({message: "There are no Workouts"})
+            res.status(404).send({ message: "There are no Workouts" })
         }
         
         res.status(200).send({ workouts })
@@ -31,7 +31,7 @@ router.get("/:id", async(req, res, next) =>{
 
         res.status(200).send({ workouts: workoutById })
     } catch (error) {
-        next(error)
+        next(error) 
     }
 })
 
@@ -54,6 +54,41 @@ router.patch("/:id", async (req, res, next) => {
     }
 })
 
+
+router.post("/userId/:userId/", async (req, res, next) => {
+    try {
+        const _id = req.params.userId 
+        const user = await User.findById(_id).populate("workouts")
+
+        if (!user){
+            res.status(404).send({message: `User not found with id: ${_id}`})
+        }
+
+
+        const { level, type, focus_area, exercises } = req.body
+        
+        const createdExercise = await Exercise.create(exercises);
+        
+        const exerciseIds = createdExercise.map(exercise => exercise._id)
+
+        const newWorkout = new Workout({
+            level, 
+            focusArea: focus_area,
+            type, 
+            exercises: exerciseIds
+        })
+
+        const savedWorkout = await newWorkout.save()
+        user.workouts.push(savedWorkout)
+        await user.save()
+
+        res.status(201).send(savedWorkout)
+    } catch (error) {
+        next(error)
+    }
+    
+})
+
 router.delete("/:id", async (req, res, next) => {
     try {
         const workoutId = req.params.id
@@ -65,7 +100,8 @@ router.delete("/:id", async (req, res, next) => {
 
         res.status(200).send({ 
             message: "Workout Deleted", 
-            workout: workoutById })
+            workout: workoutById 
+        })
     } catch (error) {
         
     }

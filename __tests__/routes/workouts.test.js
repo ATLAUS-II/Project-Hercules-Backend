@@ -10,7 +10,7 @@ const {
 const request = require("supertest");
 const { app } = require("../../src/app");
 
-const { Workout } = require("../../models");
+const { Workout, Exercise, User } = require("../../models");
 const { memoryServerConnect, memoryServerDisconnect, clearDatabase,} = require("../../db/dbUtil");
 const mongoose = require("mongoose");
 const { json } = require("express");
@@ -29,26 +29,43 @@ const { WorkoutRouter } = require("../../src/routes");
 describe("Workout Integration Tests", () => {
     const workoutId = new mongoose.Types.ObjectId('66acf8aa81a040c542f016c1')
 
+    const mockUser = {
+        nickname: "Phil",
+        email: "Phil@test.com",
+        userId: "1",
+    }
     const mockWorkout1 = {
         _id: workoutId,
         type: "Strength Training",
         level:"Intermediate",
         focusArea: "Upper",
-        exercise: []
+        exercises: []
     }
 
     const mockWorkout2 = {
         type: "Body Building",
         level:"Beginner",
         focusArea: "Lower",
-        exercise: []
+        exercises: []
     } 
 
     const updatedWorkout = {
         type: "Body Building",
         level:"Advanced",
         focusArea: "Lower",
-        exercise: []
+        exercises: []
+    }
+
+    const mockExercise1 = {
+        name: "Push Ups",
+        rep: 8,
+        set: 3
+    }
+
+    const mockExercise2 = {
+        name: "Pull Ups",
+        rep: 12,
+        set: 2
     }
 
     beforeAll(async () => {
@@ -63,24 +80,24 @@ describe("Workout Integration Tests", () => {
         await clearDatabase()
     })
 
-    test("Find all workouts", async () => {
+    test("/GET Find all workouts", async () => {
         const newWorkout1 = await Workout.create(mockWorkout1)
         const newWorkout2 = await Workout.create(mockWorkout2)
 
-        const allWorkouts = {
+        const allWorkouts = [
             newWorkout1,
             newWorkout2
-        }
+        ]
 
         const response = await request(app)
             .get('/api/v1/workouts/all')
-            .set('X-User-Info', JSON.stringify(allWorkouts))
-
+            .set('X-User-Info', JSON.stringify({ workouts: allWorkouts }))
+    
         expect(response.status).toBe(200)
         expect(response.body.workouts.length).toBeGreaterThan(0)
     })
 
-    test("Find workout by Id", async () => {
+    test("/GET find a workout by Id", async () => {
         const newWorkout1 = await Workout.create(mockWorkout1)
         const newWorkout2 = await Workout.create(mockWorkout2)
 
@@ -94,19 +111,19 @@ describe("Workout Integration Tests", () => {
 
         const response = await request(app)
             .get(`/api/v1/workouts/${allWorkouts[0]._id}`)
-            .set('X-User-Info', JSON.stringify(workoutById))
+            .set('X-User-Info', JSON.stringify({ workout: workoutById }))
         
         expect(response.status).toBe(200)
         expect(response.body.workouts._id).toBe(allWorkouts[0]._id.toString())
     })
 
-    test("Update Workout info", async () => {
+    test("/PATCH update Workout info", async () => {
         const newWorkout = await Workout.create(mockWorkout1) 
         const workoutById = await Workout.findByIdAndUpdate(workoutId, updatedWorkout, { new: true })
 
         const response = await request(app)
-        .patch(`/api/v1/workouts/${workoutId}`)
-        .send(updatedWorkout)  
+            .patch(`/api/v1/workouts/${workoutId}`)
+            .send({ workout: updatedWorkout })   
 
         expect(response.status).toBe(200)
         expect(response.body.workout.level).toBe(updatedWorkout.level);
@@ -115,14 +132,11 @@ describe("Workout Integration Tests", () => {
 
     })
 
-    test("Delete a workout", async () => {
+    test("/DELETE a workout", async () => {
         const newWorkout1 = await Workout.create(mockWorkout1)
-
         const workoutById = await Workout.findByIdAndDelete(workoutId, { new: true })
-        console.log(workoutById) 
 
         const deletedWorkout = await Workout.findById(newWorkout1._id)
-
 
         const response =  await request(app)
         .delete(`/api/v1/workouts/${workoutId}`)
@@ -132,6 +146,35 @@ describe("Workout Integration Tests", () => {
         expect(response.status).toBe(404)
         expect(deletedWorkout).toBeNull()
     })
+
+    test("/POST add exercises to workout", async () => {
+
+        const newUser = await User.create(mockUser)
+
+        const newWorkout = {
+            level: "Beginner",
+            type: "Body",
+            focus_area: "upper",
+            exercises: [mockExercise1, mockExercise2]
+        }
+
+        const response = await request(app)
+            .post(`/api/v1/workouts/userId/${newUser._id}`)
+            .send(newWorkout)
+
+        // const user = await User.findById(newUser._id).populate("workouts")
+        // console.log(user) 
+        // const userWorkouts = await Workout.findById(user.workouts[0]._id).populate("exercises")
+        // console.log(userWorkouts)  
+
+
+        expect(response.status).toBe(201)
+        expect(response.body.level).toBe(newWorkout.level)        
+        expect(response.body.type).toBe(newWorkout.type)
+        expect(response.body.focusArea).toBe(newWorkout.focus_area)
+    })
+
+
 })
 
 

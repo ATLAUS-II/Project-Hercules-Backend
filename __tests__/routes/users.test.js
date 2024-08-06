@@ -133,7 +133,7 @@ describe("User Integration Test", () => {
     await clearDatabase(); // Ensure the database is clean before each test
   });
 
-  test("Find all users", async () => {
+  test("/GET Find all users", async () => {
     // Insert mock users into the database
     const newUser1 = await User.create(mockAuthUser1);
     const newUser2 = await User.create(mockAuthUser2);
@@ -154,7 +154,7 @@ describe("User Integration Test", () => {
     expect(response.body.users.length).toBeGreaterThan(0) 
   });
 
-  test("Find user by Id", async () => {
+  test("/GET find user by Id", async () => {
     const newUser1 = await User.create(mockAuthUser1);
     const newUser2 = await User.create(mockAuthUser2);
 
@@ -175,7 +175,7 @@ describe("User Integration Test", () => {
     expect(response.body.user.email).toBe(mockAuthUser1.email)
   })
 
-  test("Update User info", async () => {
+  test("/PATCH update User info", async () => {
     const newUser = await User.create(mockAuthUser1)
     const userById = await User.findByIdAndUpdate(userId, userUpdate, { new: true })
 
