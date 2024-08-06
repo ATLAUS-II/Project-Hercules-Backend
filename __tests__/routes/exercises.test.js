@@ -14,14 +14,14 @@ const { memoryServerConnect, memoryServerDisconnect, clearDatabase,} = require("
 const mongoose = require("mongoose");
 const { json } = require("express");
 
-// // Mock the express-oauth2-jwt-bearer module.
-// jest.mock("express-oauth2-jwt-bearer", () => ({
-//     auth: jest.fn(() => {
-//         return (req, res, next) => {
-//             next();
-//         };
-//     })
-// }));
+// Mock the express-oauth2-jwt-bearer module.
+jest.mock("express-oauth2-jwt-bearer", () => ({
+    auth: jest.fn(() => {
+        return (req, res, next) => {
+            next();
+        };
+    })
+}));
 
 
 describe("Exercise Integration Tests", () => {
