@@ -84,37 +84,22 @@ describe("Workout Integration Tests", () => {
         const newWorkout1 = await Workout.create(mockWorkout1)
         const newWorkout2 = await Workout.create(mockWorkout2)
 
-        const allWorkouts = [
-            newWorkout1,
-            newWorkout2
-        ]
-
         const response = await request(app)
             .get('/api/v1/workouts/all')
-            .set('X-User-Info', JSON.stringify({ workouts: allWorkouts }))
-    
+
         expect(response.status).toBe(200)
         expect(response.body.workouts.length).toBeGreaterThan(0)
+        expect(response.body.workouts).toBeInstanceOf(Array)
     })
 
     test("/GET find a workout by Id", async () => {
-        const newWorkout1 = await Workout.create(mockWorkout1)
-        const newWorkout2 = await Workout.create(mockWorkout2)
-
-
-        const allWorkouts = [
-            newWorkout1,
-            newWorkout2
-        ] 
+        const newWorkout = await Workout.create(mockWorkout1)
         
-        const workoutById = await Workout.findById(allWorkouts[0]._id)
-
         const response = await request(app)
-            .get(`/api/v1/workouts/${allWorkouts[0]._id}`)
-            .set('X-User-Info', JSON.stringify({ workout: workoutById }))
+            .get(`/api/v1/workouts/${newWorkout._id}`)
         
         expect(response.status).toBe(200)
-        expect(response.body.workouts._id).toBe(allWorkouts[0]._id.toString())
+        expect(response.body.workouts._id).toBe(newWorkout._id.toString()) 
     })
 
     test("/PATCH update Workout info", async () => {
@@ -133,24 +118,19 @@ describe("Workout Integration Tests", () => {
     })
 
     test("/DELETE a workout", async () => {
-        const newWorkout1 = await Workout.create(mockWorkout1)
-        const workoutById = await Workout.findByIdAndDelete(workoutId, { new: true })
-
-        const deletedWorkout = await Workout.findById(newWorkout1._id)
+        const newWorkout = await Workout.create(mockWorkout1)
 
         const response =  await request(app)
-        .delete(`/api/v1/workouts/${workoutId}`)
-        .send()    
+        .delete(`/api/v1/workouts/${newWorkout._id}`)    
 
-
-        expect(response.status).toBe(404)
-        expect(deletedWorkout).toBeNull()
+        expect(response.status).toBe(200) 
+        expect(response.body.message).toBe("Workout Deleted")
     })
 
     test("/POST add exercises to workout", async () => {
 
         const newUser = await User.create(mockUser)
-
+                
         const newWorkout = {
             level: "Beginner",
             type: "Body",
@@ -161,13 +141,7 @@ describe("Workout Integration Tests", () => {
         const response = await request(app)
             .post(`/api/v1/workouts/userId/${newUser._id}`)
             .send(newWorkout)
-
-        // const user = await User.findById(newUser._id).populate("workouts")
-        // console.log(user) 
-        // const userWorkouts = await Workout.findById(user.workouts[0]._id).populate("exercises")
-        // console.log(userWorkouts)  
-
-
+        
         expect(response.status).toBe(201)
         expect(response.body.level).toBe(newWorkout.level)        
         expect(response.body.type).toBe(newWorkout.type)

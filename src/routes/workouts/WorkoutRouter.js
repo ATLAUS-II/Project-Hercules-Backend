@@ -22,8 +22,8 @@ router.get("/all", async(req, res, next) => {
 
 router.get("/:id", async(req, res, next) =>{
     try {
-        const workoutId = req.params.id
-        const workoutById = await Workout.findById(workoutId)
+        const { id } = req.params 
+        const workoutById = await Workout.findById(id)
 
         if (!workoutById) {
             res.status(404).send({ message: "Workout not found"})
@@ -38,8 +38,8 @@ router.get("/:id", async(req, res, next) =>{
 router.patch("/:id", async (req, res, next) => {
     try {
         const workoutUpdate = req.body
-        const workoutId = req.params.id
-        const workoutById = await Workout.findByIdAndUpdate(workoutId, workoutUpdate, { new: true })
+        const { id } = req.params
+        const workoutById = await Workout.findByIdAndUpdate(id, workoutUpdate, { new: true })
 
         if (!workoutById) {
             res.status(404).send({ message: "Workout Not Found"})
@@ -57,13 +57,12 @@ router.patch("/:id", async (req, res, next) => {
 
 router.post("/userId/:userId/", async (req, res, next) => {
     try {
-        const _id = req.params.userId 
-        const user = await User.findById(_id).populate("workouts")
-
+        const { userId } = req.params 
+        const user = await User.findById(userId).populate("workouts")
+        
         if (!user){
-            res.status(404).send({message: `User not found with id: ${_id}`})
+            res.status(404).send({ message: `User not found with id: ${id}` })
         }
-
 
         const { level, type, focus_area, exercises } = req.body
         
@@ -91,8 +90,8 @@ router.post("/userId/:userId/", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
     try {
-        const workoutId = req.params.id
-        const workoutById = await Workout.findByIdAndDelete(workoutId, {new: true})
+        const { id } = req.params 
+        const workoutById = await Workout.findByIdAndDelete(id)
 
         if (!workoutById) {
             res.status(404).send({ message: "Workout Not Found"})

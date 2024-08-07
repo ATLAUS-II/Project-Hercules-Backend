@@ -11,8 +11,6 @@ const { app } = require("../../src/app");
 
 const { Exercise } = require("../../models");
 const { memoryServerConnect, memoryServerDisconnect, clearDatabase,} = require("../../db/dbUtil");
-const mongoose = require("mongoose");
-const { json } = require("express");
 
 // Mock the express-oauth2-jwt-bearer module.
 jest.mock("express-oauth2-jwt-bearer", () => ({
@@ -60,63 +58,48 @@ describe("Exercise Integration Tests", () => {
 
         const response = await request(app)
             .get('/api/v1/exercises/all')
-            .set('X-User-Info', JSON.stringify(allExercises))
 
-        // console.log(response.body)
         expect(response.status).toBe(200)
         expect(response.body.exercises.length).toBeGreaterThan(0)
+        expect(response.body.exercises).toBeInstanceOf(Array) // repsonse body contains an array of exerciese
     })
 
     test("/GET find Exercise by Id", async () => {
-        const newExercise1 = await Exercise.create(mockExercise1)
-        const newExercise2 = await Exercise.create(mockExercise2)
-
-        const allExercises = [
-            newExercise1,
-            newExercise2
-        ]
-
-
-        const exerciseById = await Exercise.findById(allExercises[0]._id)
-
+        const newExercise = await Exercise.create(mockExercise1)
+        
         const response = await request(app)
-            .get(`/api/v1/exercises/${allExercises[0]._id}`)
-            .set('X-User-Info', JSON.stringify({ exercise: exerciseById }))
+            .get(`/api/v1/exercises/${newExercise._id}`)
 
         expect(response.status).toBe(200)
-        expect(response.body.exercise.name).toBe(mockExercise1.name)
-        expect(response.body.exercise.rep).toEqual(8) 
-        expect(response.body.exercise.set).toEqual(3)  
+        expect(response.body.exercise.name).toBe(newExercise.name)
+        expect(response.body.exercise.rep).toEqual(newExercise.rep) 
+        expect(response.body.exercise.set).toEqual(newExercise.set)  
 
     })
 
     test("/PATCH update exercise info", async () => {
-        const newExercise1 = await Exercise.create(mockExercise1)
-        const exerciseById = await Exercise.findByIdAndUpdate(newExercise1._id, {
+        const newExercise = await Exercise.create(mockExercise1)
+        const exercise = {
             rep: 15,
             set: 2
-        }, { new: true })
+        }
 
         const response = await request(app)
-            .patch(`/api/v1/exercises/${newExercise1._id}`)
-            .send(exerciseById)
-            
+            .patch(`/api/v1/exercises/${newExercise._id}`)
+            .send(exercise)
+                
         expect(response.status).toBe(200) 
-        expect(response.body.exercise.rep).toEqual(15)
-        expect(response.body.exercise.set).toEqual(2)
+        expect(response.body.exercise.rep).toEqual(exercise.rep)
+        expect(response.body.exercise.set).toEqual(exercise.set)
     })
 
     test("/DELETE an exercise", async () => {
         const newExercise1 = await Exercise.create(mockExercise1)
-        const exerciseById = await Exercise.findByIdAndDelete(newExercise1._id)
-        const deletedExercise = await Exercise.findById(exerciseById._id)
 
         const response = await request(app)
-            .delete(`/api/v1/exercises/${newExercise1._id}`)
-            .send()
+            .delete(`/api/v1/exercises/${newExercise1._id}`) 
 
-
-        expect(response.status).toBe(404)
-        expect(deletedExercise).toBeNull() 
+        expect(response.status).toBe(200)
+        expect(response.body.message).toBe('Exercise Deleted')
     })
 })

@@ -19,8 +19,8 @@ router.get("/all", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
     try {
-        const exerciseId = req.params.id
-        const exerciseById = await Exercise.findById(exerciseId)
+        const { id } = req.params
+        const exerciseById = await Exercise.findById(id)
 
         if (!exerciseById) {
             res.status(404).send({message: "Exercise not found"})
@@ -35,8 +35,8 @@ router.get("/:id", async (req, res, next) => {
 router.patch("/:id", async (req, res, next) => {
     try {
         const exerciseUpdate = req.body
-        const exerciseId = req.params.id
-        const exerciseById = await Exercise.findByIdAndUpdate(exerciseId, exerciseUpdate, { new: true })
+        const { id } = req.params
+        const exerciseById = await Exercise.findByIdAndUpdate(id, exerciseUpdate, { new: true })
 
         if (!exerciseById) {
             res.status(404),send({messsage: "Exercise not found"})
@@ -53,8 +53,8 @@ router.patch("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
     try {
-        const exerciseId = req.params.id
-        const exerciseById = await Exercise.findByIdAndDelete(exerciseId)
+        const { id } = req.params
+        const exerciseById = await Exercise.findByIdAndDelete(id)
 
         if(!exerciseById){
             res.status(404).send({message: "Exercise not found"})

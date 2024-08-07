@@ -9,11 +9,9 @@ const {
 } = require('@jest/globals')
 const request = require('supertest')
 const { app } = require('../../src/app')
-
 const { User } = require('../../models')
 const { memoryServerConnect, memoryServerDisconnect, clearDatabase } = require('../../db/dbUtil')
 const mongoose  = require('mongoose')
-const { json } = require('express')
 
 // Mock the express-oauth2-jwt-bearer module.
 jest.mock('express-oauth2-jwt-bearer', () => ({
@@ -22,7 +20,7 @@ jest.mock('express-oauth2-jwt-bearer', () => ({
       next()
     }
   })
-})) 
+}))  
 
 describe('GET user info', () => {
   // Variables to hold the jest spies.
@@ -60,8 +58,6 @@ describe('GET user info', () => {
       .get('/api/v1/users/')
       .set('X-User-Info', JSON.stringify(mockAuthUser))
 
-    // console.log(response)
-
     expect(response.status).toBe(200)
     expect(response.body).toEqual({ user: mockDBUser })
   })
@@ -88,9 +84,7 @@ describe('GET user info', () => {
     // Send request to user by id endpoint.
     const response = await request(app)
       .get('/api/v1/users/')
-      .set('X-User-Info', JSON.stringify(newUser))
-
-    // console.log(response)
+      .set('X-User-Info', JSON.stringify(newUser)) 
 
     expect(response.status).toBe(201)
     expect(response.body).toEqual({ user: newDBUser })
@@ -137,54 +131,42 @@ describe("User Integration Test", () => {
     // Insert mock users into the database
     const newUser1 = await User.create(mockAuthUser1);
     const newUser2 = await User.create(mockAuthUser2);
-
-    const allUsers = {
-      newUser1,
-      newUser2
-    }
-
   
     // Send a request to the endpoint
     const response = await request(app)
       .get('/api/v1/users/all')
-      .set('X-User-Info', JSON.stringify(allUsers));
-
+    
     // Assertions
     expect(response.status).toBe(200);
     expect(response.body.users.length).toBeGreaterThan(0) 
+    expect(response.body.users).toBeInstanceOf(Array) 
   });
 
   test("/GET find user by Id", async () => {
-    const newUser1 = await User.create(mockAuthUser1);
-    const newUser2 = await User.create(mockAuthUser2);
+    const newUser = await User.create(mockAuthUser1);
 
-    const allUsers = [
-      newUser1,
-      newUser2
-    ]
-    
-    const userById = await User.findById(allUsers[0]._id)  
-    
     const response = await request(app)
-      .get(`/api/v1/users/${allUsers[0]._id}`)
-      .set('X-User-Info', JSON.stringify(userById))
-
+      .get(`/api/v1/users/${newUser._id}`)
+    
     expect(response.status).toBe(200)
-    expect(response.body.user._id).toBe(allUsers[0]._id.toString())
-    expect(response.body.user.nickname).toBe(mockAuthUser1.nickname)
-    expect(response.body.user.email).toBe(mockAuthUser1.email)
+    expect(response.body.user._id).toBe(newUser._id.toString())
+    expect(response.body.user.nickname).toBe(newUser.nickname)
+    expect(response.body.user.email).toBe(newUser.email)
   })
 
   test("/PATCH update User info", async () => {
     const newUser = await User.create(mockAuthUser1)
-    const userById = await User.findByIdAndUpdate(userId, userUpdate, { new: true })
+    const userUpdate = {
+      nickname: "Phillip",
+      email: "Phillip@test.com"
+    }
 
     const response = await request(app)
-      .patch(`/api/v1/users/${userId}`)
-      .send(userById)
+      .patch(`/api/v1/users/${newUser._id}`)
+      .send(userUpdate)
 
     expect(response.status).toBe(200) 
-    expect(response.body.user.nickname).toBe(userById.nickname)
-    expect(response.body.user.email).toBe(userById.email)
+    expect(response.body.user.nickname).toBe("Phillip")
+    expect(response.body.user.email).toBe("Phillip@test.com")
   })
 });

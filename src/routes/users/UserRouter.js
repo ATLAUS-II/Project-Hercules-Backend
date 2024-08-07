@@ -42,8 +42,8 @@ router.get("/all", async(req, res, next) => {
 
 router.get("/:id", async(req, res, next) => {
   try {
-    const userId = req.params.id
-    const userById = await User.findById(userId)
+    const { id } = req.params
+    const userById = await User.findById(id)
     
     if (!userById) {
       return res.status(404).send({ message: "User not found" })
@@ -57,9 +57,9 @@ router.get("/:id", async(req, res, next) => {
 
 router.patch("/:id", async(req, res, next) => {
   try {
-    const userId = req.params.id
-    const update = req.body
-    const userById = await User.findByIdAndUpdate(userId, update, { new: true }) // {new:true} returns updated document
+    const { id } = req.params
+    const update = req.body 
+    const userById = await User.findByIdAndUpdate(id, update, { new: true }) // {new:true} returns updated document
     
     if (!userById) {
       res.status(404).send({ message: "User Not Found" })
