@@ -61,7 +61,7 @@ router.post("/userId/:userId/", async (req, res, next) => {
         const user = await User.findById(userId).populate("workouts")
         
         if (!user){
-            res.status(404).send({ message: `User not found with id: ${id}` })
+            res.status(404).send({ message: `User not found with id: ${userId}` })
         }
 
         const { level, type, focus_area, exercises } = req.body
