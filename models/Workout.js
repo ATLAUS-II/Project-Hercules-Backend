@@ -1,27 +1,31 @@
-const { Schema } = require("mongoose")
+const { Schema } = require('mongoose')
 
 const Workout = new Schema(
-    {
-        focusArea: {
-            type: String,
-            required: true
-        },
-        type: {
-            type: String,
-            required: true
-        },
-        level: {
-            type: String,
-            required: true
-        },
-        exercises: [{
-            type: Schema.Types.ObjectId, 
-            ref: "Exercise"
-        }]
+  {
+    name: {
+      type: String,
+      required: true
     },
-    { timestamps: true }
-    
+    focusArea: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true
+    },
+    level: {
+      type: String,
+      required: true
+    },
+    exercises: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Exercise'
+      }
+    ]
+  },
+  { timestamps: true }
 )
-
 
 module.exports = Workout
