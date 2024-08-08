@@ -22,7 +22,7 @@ describe("User Model test", () => {
         type: "Strength Training",
         level:"Intermediate",
         focusArea: "Upper",
-        exercise: []
+        exercises: []
     }
 
     beforeAll(async () => {
@@ -99,7 +99,7 @@ describe("Workout Model Test", () => {
         type: "Strength Training",
         level:"Intermediate",
         focusArea: "Upper",
-        exercise: []
+        exercises: []
     }
 
     const mockExercise = {
@@ -140,7 +140,7 @@ describe("Workout Model Test", () => {
             focusArea: "Lower",
             type: "Body Building",
             level:"Beginner",
-            exercise: []
+            exercises: []
         })
 
         const workouts = await Workout.find()
@@ -150,20 +150,20 @@ describe("Workout Model Test", () => {
     })
 
     test("Exercise can be added to workout", async () => {
-        const workout = await Workout.findById(workoutId).populate("exercise")
+        const workout = await Workout.findById(workoutId).populate("exercises")
         const newExercise = await Exercise.create({
             name: "Barbell Rows",
             rep: 8,
             set: 3
         })
 
-        workout.exercise.push(newExercise)
+        workout.exercises.push(newExercise)
         await workout.save()
     
         expect(newExercise).toBeInstanceOf(Exercise)
-        expect(workout.exercise[0].name).toBe(newExercise.name)
-        expect(workout.exercise[0].rep).toEqual(newExercise.rep)
-        expect(workout.exercise[0].set).toEqual(newExercise.set) 
+        expect(workout.exercises[0].name).toBe(newExercise.name)
+        expect(workout.exercises[0].rep).toEqual(newExercise.rep)
+        expect(workout.exercises[0].set).toEqual(newExercise.set) 
 
     })
 
@@ -177,7 +177,7 @@ describe("Workout Model Test", () => {
 
 
 describe("Exercise Model Test", () => {
-    const exerciseId = new mongoose.Types.ObjectId('66a831cd5183e13217b06a74')
+    const exerciseId = new mongoose.Types.ObjectId('66a831cd5183e13217b06a74') 
 
     const mockExercise = {
         _id: exerciseId,
