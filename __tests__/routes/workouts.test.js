@@ -150,8 +150,6 @@ describe('Workout Integration Tests', () => {
       exercises: [mockExercise1, mockExercise2]
     }
 
-    const workouts = [mockExercise1, mockExercise2]
-
     const response = await request(app)
       .post(`/api/v1/workouts/userId/${newUser._id}`)
       .send(newWorkout)
