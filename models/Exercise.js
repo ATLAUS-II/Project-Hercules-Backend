@@ -1,19 +1,18 @@
-const { Schema } = require("mongoose")
+const { Schema } = require('mongoose')
 
 const Exercise = new Schema({
-    name: {
-        type: String,
-        required: true 
-    },
-    rep: {
-        type: Number,
-        required: true
-    },
-    set: {
-        type: Number,
-        required: true
-    }
+  name: {
+    type: String,
+    required: true
+  },
+  reps: {
+    type: Number,
+    required: true
+  },
+  sets: {
+    type: Number,
+    required: true
+  }
 })
-
 
 module.exports = Exercise
