@@ -27,7 +27,8 @@ router.get('/:id', async (req, res, next) => {
       res.status(404).send({ message: 'Workout not found' })
     }
 
-    res.status(200).send({ workouts: workoutById })
+    await workoutById.populate('exercises')
+    res.status(200).send({ workout: workoutById })
   } catch (error) {
     next(error)
   }
