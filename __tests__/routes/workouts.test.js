@@ -94,7 +94,7 @@ describe('Workout Integration Tests', () => {
     )
 
     expect(response.status).toBe(200)
-    expect(response.body.workouts._id).toBe(newWorkout._id.toString())
+    expect(response.body.workout._id).toBe(newWorkout._id.toString())
   })
 
   test('/PATCH update Workout info', async () => {
