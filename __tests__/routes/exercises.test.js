@@ -58,10 +58,19 @@ describe('Exercise Integration Tests', () => {
 
     const response = await request(app).get('/api/v1/exercises/all')
 
-    expect(response.status).toBe(200)
-    expect(response.body.exercises.length).toBeGreaterThan(0)
-    expect(response.body.exercises).toBeInstanceOf(Array) // response body contains an array of exercises.
-  })
+        expect(response.status).toBe(200)
+        expect(response.body.exercises.length).toBeGreaterThan(0)
+        allExercises.forEach(exercise => {
+            expect.arrayContaining([
+                expect.objectContaining({
+                    _id: String(exercise._id),
+                    name: exercise.name,
+                    reps: exercise.reps,
+                    sets: exercise.sets
+                })
+            ])
+        })
+    })
 
   test('/GET find Exercise by Id', async () => {
     const newExercise = await Exercise.create(mockExercise1)
