@@ -107,8 +107,8 @@ describe('Workout Model Test', () => {
   const mockExercise = {
     _id: exerciseId,
     name: 'Pull Up',
-    rep: 10,
-    set: 3
+    reps: 10,
+    sets: 3
   }
 
   beforeAll(async () => {
@@ -161,8 +161,8 @@ describe('Workout Model Test', () => {
 
     expect(newExercise).toBeInstanceOf(Exercise)
     expect(workout.exercises[0].name).toBe(mockExercise.name)
-    expect(workout.exercises[0].rep).toEqual(mockExercise.rep)
-    expect(workout.exercises[0].set).toEqual(mockExercise.set)
+    expect(workout.exercises[0].reps).toEqual(mockExercise.reps)
+    expect(workout.exercises[0].sets).toEqual(mockExercise.sets)
   })
 
   test('Workout can be deleted', async () => {
@@ -179,8 +179,8 @@ describe('Exercise Model Test', () => {
   const mockExercise = {
     _id: exerciseId,
     name: 'Push Ups',
-    rep: 10,
-    set: 8
+    reps: 10,
+    sets: 8
   }
 
   beforeAll(async () => {
@@ -196,8 +196,8 @@ describe('Exercise Model Test', () => {
 
     expect(exercise).toBeInstanceOf(Exercise)
     expect(exercise.name).toBe(mockExercise.name)
-    expect(exercise.rep).toEqual(mockExercise.rep)
-    expect(exercise.set).toEqual(mockExercise.set)
+    expect(exercise.reps).toEqual(mockExercise.reps)
+    expect(exercise.sets).toEqual(mockExercise.sets)
   })
 
   test('Find exercise by Id', async () => {
@@ -206,14 +206,14 @@ describe('Exercise Model Test', () => {
     expect(exercise).toBeInstanceOf(Exercise)
     expect(exercise._id.toString()).toBe(exerciseId._id.toString())
     expect(exercise.name).toBe(mockExercise.name)
-    expect(exercise.rep).toEqual(mockExercise.rep)
-    expect(exercise.set).toEqual(mockExercise.set)
+    expect(exercise.reps).toEqual(mockExercise.reps)
+    expect(exercise.sets).toEqual(mockExercise.sets)
   })
 
   test('Exercise can be updated', async () => {
     const exercise = await Exercise.findByIdAndUpdate(exerciseId, {
-      rep: 8,
-      set: 2
+      reps: 8,
+      sets: 2
     })
     const updatedExercise = await Exercise.findById(exerciseId)
 
@@ -221,8 +221,8 @@ describe('Exercise Model Test', () => {
       updatedExercise.toObject()._id.toString()
     )
     expect(updatedExercise.name).toBe('Push Ups')
-    expect(updatedExercise.rep).toEqual(8)
-    expect(updatedExercise.set).toEqual(2)
+    expect(updatedExercise.reps).toEqual(8)
+    expect(updatedExercise.sets).toEqual(2)
   })
 
   test('Exercise can be deleted', async () => {

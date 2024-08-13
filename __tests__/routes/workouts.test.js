@@ -53,14 +53,14 @@ describe('Workout Integration Tests', () => {
 
   const mockExercise1 = {
     name: 'Push Ups',
-    rep: 8,
-    set: 3
+    reps: 8,
+    sets: 3
   }
 
   const mockExercise2 = {
     name: 'Pull Ups',
-    rep: 12,
-    set: 2
+    reps: 12,
+    sets: 2
   }
 
   beforeAll(async () => {
@@ -89,6 +89,7 @@ describe('Workout Integration Tests', () => {
         expect.arrayContaining([
             expect.objectContaining({
             _id: String(workout._id),
+            name: workout.name,
             focusArea: workout.focusArea,
             type: workout.type,
             level: workout.level,
