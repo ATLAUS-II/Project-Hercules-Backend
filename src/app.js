@@ -33,6 +33,10 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+app.get('', (req, res) => {
+  console.log(JSON.stringify(req))
+})
+
 app.get('/test', (req, res) => {
   res.json({ message: 'Hello World' })
 })
