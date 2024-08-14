@@ -29,6 +29,9 @@ async function runGemini(focus_area, type, level) {
   const response = result.response
   const text = response.text()
 
+  // TODO: Figure out how to ensure the response schema is followed.
+  //console.log(text)
+
   return text
 }
 
