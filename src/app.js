@@ -34,7 +34,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.get('', (req, res) => {
-  console.log(JSON.stringify(req))
+  console.log(req.headers)
 })
 
 app.get('/test', (req, res) => {
