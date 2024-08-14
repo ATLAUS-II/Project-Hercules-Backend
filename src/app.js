@@ -19,11 +19,16 @@ const jwtCheck = auth({
   tokenSigningAlg: AUTH0_SIGNING_ALGO
 })
 
+console.log('Auth0 Secret:', AUTH0_SECRET)
+console.log('Auth0 Audience:', AUTH0_AUDIENCE)
+console.log('Auth0 Base URL:', AUTH0_BASE_URL)
+console.log('Auth0 Signing Algo:', AUTH0_SIGNING_ALGO)
+
 const app = express()
 
 app.use(cors())
 // app.use(morgan('dev'))
-// app.use(jwtCheck)
+app.use(jwtCheck)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
