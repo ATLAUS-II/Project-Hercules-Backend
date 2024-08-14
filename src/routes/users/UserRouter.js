@@ -5,6 +5,7 @@ const router = express.Router()
 
 // GET User by ID and if no user is found, create user.
 router.get('/', async (req, res, next) => {
+  console.log('Ran GET /api/v1/users')
   const userInfo = JSON.parse(req.headers['x-user-info'])
   const userId = userInfo.sub.split('|')[1]
 
