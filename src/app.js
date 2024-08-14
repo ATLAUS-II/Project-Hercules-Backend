@@ -33,6 +33,10 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+app.get('/test', (req, res) => {
+  res.json({ message: 'Hello World' })
+})
+
 app.use('/api/v1/users', UserRouter)
 
 app.use('/api/v1/gemini', GeminiRouter)
