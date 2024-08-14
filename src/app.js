@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const { createServer } = require('http')
 const cors = require('cors')
 const {
   UserRouter,
@@ -19,27 +20,19 @@ const jwtCheck = auth({
   tokenSigningAlg: AUTH0_SIGNING_ALGO
 })
 
-console.log('Auth0 Secret:', AUTH0_SECRET)
-console.log('Auth0 Audience:', AUTH0_AUDIENCE)
-console.log('Auth0 Base URL:', AUTH0_BASE_URL)
-console.log('Auth0 Signing Algo:', AUTH0_SIGNING_ALGO)
-
 const app = express()
-
-app.get('/health', (req, res) => {
-  res.json({ message: 'Server is running' })
-})
+const httpServer = createServer(app)
 
 app.use(cors())
 app.use(morgan('dev'))
+
+app.get('/', (req, res) => res.status(200).end())
+app.get('/favicon.ico', (req, res) => res.status(204).end())
+
 app.use(jwtCheck)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-app.get('/test', (req, res) => {
-  res.json({ message: 'Hello World' })
-})
 
 app.use('/api/v1/users', UserRouter)
 
@@ -50,5 +43,5 @@ app.use('/api/v1/workouts', WorkoutRouter)
 app.use('/api/v1/exercises', ExerciseRouter)
 
 module.exports = {
-  app
+  httpServer
 }
