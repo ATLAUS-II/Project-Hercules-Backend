@@ -30,6 +30,11 @@ app.get('/', (req, res) => res.status(200).end())
 app.get('/favicon.ico', (req, res) => res.status(204).end())
 app.get('/health', (req, res) => res.status(200).end())
 
+app.use((req, res, next) => {
+  console.log(req.headers)
+  next()
+})
+
 app.use(jwtCheck)
 
 app.use(express.json())
