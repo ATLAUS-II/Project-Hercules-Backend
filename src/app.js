@@ -28,7 +28,7 @@ app.use(morgan('dev'))
 
 app.get('/', (req, res) => res.status(200).end())
 app.get('/favicon.ico', (req, res) => res.status(204).end())
-app.get('/health', (req, rew) => res.status(200).end())
+app.get('/health', (req, res) => res.status(200).end())
 
 app.use(jwtCheck)
 
