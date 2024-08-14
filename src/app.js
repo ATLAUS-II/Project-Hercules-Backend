@@ -26,16 +26,16 @@ console.log('Auth0 Signing Algo:', AUTH0_SIGNING_ALGO)
 
 const app = express()
 
+app.get('/health', (req, res) => {
+  res.json({ message: 'Server is running' })
+})
+
 app.use(cors())
 app.use(morgan('dev'))
-// app.use(jwtCheck)
+app.use(jwtCheck)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-app.get('', (req, res) => {
-  console.log(req.headers)
-})
 
 app.get('/test', (req, res) => {
   res.json({ message: 'Hello World' })
