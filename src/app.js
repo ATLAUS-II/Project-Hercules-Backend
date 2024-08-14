@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require('express')
-const { createServer } = require('http')
 const cors = require('cors')
 const {
   UserRouter,
@@ -21,7 +20,6 @@ const jwtCheck = auth({
 })
 
 const app = express()
-const httpServer = createServer(app)
 
 app.use(cors())
 app.use(morgan('dev'))
@@ -44,5 +42,5 @@ app.use('/api/v1/workouts', WorkoutRouter)
 app.use('/api/v1/exercises', ExerciseRouter)
 
 module.exports = {
-  httpServer
+  app
 }
