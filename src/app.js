@@ -12,14 +12,14 @@ const { auth } = require('express-oauth2-jwt-bearer')
 const { AUTH0_SECRET, AUTH0_AUDIENCE, AUTH0_BASE_URL, AUTH0_SIGNING_ALGO } =
   process.env
 
-const app = express()
-
 const jwtCheck = auth({
   secret: AUTH0_SECRET,
   audience: AUTH0_AUDIENCE,
   issuerBaseURL: AUTH0_BASE_URL,
   tokenSigningAlg: AUTH0_SIGNING_ALGO
 })
+
+const app = express()
 
 app.use(cors())
 app.use(morgan('dev'))

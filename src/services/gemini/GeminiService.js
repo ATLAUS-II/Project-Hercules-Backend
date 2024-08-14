@@ -29,6 +29,8 @@ async function runGemini(focus_area, type, level) {
   const response = result.response
   const text = response.text()
 
+  console.log(text)
+
   return text
 }
 

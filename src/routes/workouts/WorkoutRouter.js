@@ -1,6 +1,5 @@
 const express = require('express')
 const { Workout, User, Exercise } = require('../../../models')
-const { default: mongoose } = require('mongoose')
 
 const router = express.Router()
 
