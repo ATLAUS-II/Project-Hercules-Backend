@@ -10,7 +10,7 @@ async function runGemini(focus_area, type, level) {
     generationConfig: { responseMimeType: 'application/json' }
   })
 
-  const prompt = `Please Generate a ${focus_area}, ${type} workout that for a ${level}. Please do not include any extra text or important notes. Do not put the JSON in a block quotes. The workout needs to strictly follow this JSON schema: 
+  const prompt = `Please Generate a ${focus_area}, ${type} workout that for a ${level}. Please do not include any extra text or important notes. Do not put the JSON in a block quotes. For individual leg or arm exercises, there is no need to add "each leg" or "each arm" after the reps or sets as it is understood. The workout needs to strictly follow this JSON schema: 
       {
         focus_area: ${focus_area},
         type: ${type},
