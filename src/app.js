@@ -8,16 +8,16 @@ const {
   ExerciseRouter
 } = require('./routes')
 const morgan = require('morgan')
-const { auth } = require('express-oauth2-jwt-bearer')
-const { AUTH0_SECRET, AUTH0_AUDIENCE, AUTH0_BASE_URL, AUTH0_SIGNING_ALGO } =
-  process.env
+//const { auth } = require('express-oauth2-jwt-bearer')
+// const { AUTH0_SECRET, AUTH0_AUDIENCE, AUTH0_BASE_URL, AUTH0_SIGNING_ALGO } =
+//   process.env
 
-const jwtCheck = auth({
-  secret: AUTH0_SECRET,
-  audience: AUTH0_AUDIENCE,
-  issuerBaseURL: AUTH0_BASE_URL,
-  tokenSigningAlg: AUTH0_SIGNING_ALGO
-})
+// const jwtCheck = auth({
+//   secret: AUTH0_SECRET,
+//   audience: AUTH0_AUDIENCE,
+//   issuerBaseURL: AUTH0_BASE_URL,
+//   tokenSigningAlg: AUTH0_SIGNING_ALGO
+// })
 
 const app = express()
 
@@ -28,7 +28,7 @@ app.get('/', (req, res) => res.status(200).end())
 app.get('/favicon.ico', (req, res) => res.status(204).end())
 app.get('/health', (req, res) => res.status(200).end())
 
-app.use(jwtCheck)
+//app.use(jwtCheck)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
