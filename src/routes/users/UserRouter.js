@@ -6,14 +6,14 @@ const router = express.Router()
 // GET User by ID and if no user is found, create user.
 router.get('/', async (req, res, next) => {
   const userInfo = JSON.parse(req.headers['x-user-info'])
-  const userId = userInfo.sub.split('|')[1]
+  const userId = userInfo.userId
 
   try {
     let user = await User.findOne({ userId: userId })
 
     if (!user) {
       user = await User.create({
-        nickname: userInfo.nickname,
+        nickname: userInfo.displayName,
         email: userInfo.email,
         userId: userId
       })
